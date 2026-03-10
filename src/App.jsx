@@ -1,12 +1,24 @@
 import "./App.css"; // Ensure this file has @import "tailwindcss"; inside it
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import ListClientsComponent from "./components/ListClientsComponent";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 
 function App() {
   return (
-    <div className="h-screen flex items-center justify-center bg-slate-900">
-      <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">
-        Tailwind v4 is Live!
-      </h1>
-    </div>
+    <BrowserRouter>
+      <Header />
+      <div className="h-screen  flex gap-8 items-center justify-center bg-slate-900">
+        <Routes>
+          {/* http://localhost:8080 */}
+          <Route path="/" element={<ListClientsComponent />} />
+          {/* http://localhost:8080/api/clients */}
+          <Route path="/clients" element={<ListClientsComponent />} />
+        </Routes>
+      </div>
+      <Footer />
+    </BrowserRouter>
   );
 }
 
