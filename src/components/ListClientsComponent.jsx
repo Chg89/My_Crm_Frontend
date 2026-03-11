@@ -13,6 +13,15 @@ function ListClientsComponent() {
       .catch((error) => console.error("Error fetching clients:", error));
   }, []);
 
+  const handleEdit = (clientId) => {
+    const client = clients.find((c) => c.id === clientId);
+
+    // For now, just log the client to be edited
+    console.log("Edit client:", client);
+    // You can navigate to an edit form or open a modal here
+    navigate("/add-client", { state: { client, isEditing: true } });
+  }
+
   return (
     <div className="w-full max-w-4xl">
       <h2 className="text-3xl font-bold text-white mb-6 text-center">
@@ -55,7 +64,7 @@ function ListClientsComponent() {
                   <td className="px-6 py-4 text-center">
                     <div className="flex justify-center gap-3">
                       <button
-                        onClick={() => handleEdit(client)}
+                        onClick={() => handleEdit(client.id)}
                         className="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium rounded transition"
                       >
                         Edit

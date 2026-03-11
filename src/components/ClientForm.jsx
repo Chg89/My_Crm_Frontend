@@ -1,28 +1,47 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
 
 const ClientForm = () => {
+  
   const navigate = useNavigate();
-  const [errors, setErrors] = useState({});
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-  });
+  const location = useLocation();
 
-  // 1. Validation Logic
+  // Extract the state we passed through navigate()
+  // We use optional chaining (?.) and default values to prevent crashes
+  const isEditing = location.state?.isEditing || false;
+  const clientData = location.state?.client || null;
+  console.log("Location state:", location.state);
+  
+  // Initialize form with client data if editing, otherwise empty strings
+  const [formData, setFormData] = useState({
+    firstName: clientData?.firstName || "",
+    lastName: clientData?.lastName || "",
+    email: clientData?.email || "",
+  });
+  const [errors, setErrors] = useState({});
+
   const validate = (name, value) => {
-    let error = "";
-    if (!value.trim()) {
-      error = "This field is required";
-    } else if (name === "email") {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(value)) {
-        error = "Please enter a valid email address";
-      }
+  let error = "";
+
+  // 1. Convert to string and handle null/undefined/numbers
+  const cleanValue = String(value || "").trim();
+
+  // 2. Check if the cleaned string is empty
+  if (cleanValue.length === 0) {
+    error = "This field is required";
+  } 
+  // 3. Email specific validation
+  else if (name === "email") {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(cleanValue)) {
+      error = "Please enter a valid email address";
     }
-    return error;
-  };
+  }
+
+  return error;
+};
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -33,13 +52,47 @@ const ClientForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+    const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Client Data Submitted:", formData);
-    // Add your saving logic or navigation here
-  };
+  
+    // 1. Validate all fields at once
+    const newErrors = {};
+    Object.keys(formData).forEach((key) => {
+      const error = validate(key, formData[key]);
+      if (error) {
+        newErrors[key] = error;
+      }
+    });
+  
+    // 2. If there are any errors, update state and stop
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return; // Don't submit!
+    }
+  
+    // 3. If no errors, proceed with API call
+    if (isEditing) {
+      
 
-  function saveClient() {
+      // Call your API 
+      fetch(`http://localhost:8080/api/clients/${clientData.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Client changed:", data);
+        // Add your success handling or navigation here
+        navigate("/clients");
+      })
+      .catch((error) => {
+        console.error("Error saving client:", error);
+      });
+  } else {
+    // Call your API 
     fetch("http://localhost:8080/api/clients", {
       method: "POST",
       headers: {
@@ -51,17 +104,17 @@ const ClientForm = () => {
       .then((data) => {
         console.log("Client saved:", data);
         // Add your success handling or navigation here
-        // For example, you could redirect to the client list page
         navigate("/clients");
       })
       .catch((error) => {
         console.error("Error saving client:", error);
       });
   }
+  };
 
   return (
     <div className="max-w-md mx-auto mt-10 p-8 bg-slate-900 border border-slate-800 rounded-2xl shadow-xl">
-      <h1 className="text-2xl font-bold text-white mb-6">Add New Client</h1>
+      <h1 className="text-2xl font-bold text-white mb-6">{isEditing ? "Edit Client" : "Add New Client"}</h1>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* First Name */}
@@ -144,7 +197,7 @@ const ClientForm = () => {
 
         {/* Submit Button */}
         <button
-          onClick={saveClient}
+          onClick={handleSubmit}
           type="submit"
           className="w-full mt-4 px-5 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg
            shadow-lg shadow-indigo-500/20 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
