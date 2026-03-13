@@ -20,7 +20,25 @@ function ListClientsComponent() {
     console.log("Edit client:", client);
     // You can navigate to an edit form or open a modal here
     navigate("/add-client", { state: { client, isEditing: true } });
-  }
+  };
+
+  const handleDelete = (clientId) => {
+    // For now, just log the client ID to be deleted
+    fetch(`http://localhost:8080/api/clients/${clientId}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Remove the client from the state
+          setClients(clients.filter((c) => c.id !== clientId));
+        } else {
+          console.error("Error deleting client:");
+        }
+      })
+      .catch((error) => console.error("Error deleting client:", error));
+
+    console.log("Delete client with ID:", clientId);
+  };
 
   return (
     <div className="w-full max-w-4xl">
@@ -67,7 +85,7 @@ function ListClientsComponent() {
                         onClick={() => handleEdit(client.id)}
                         className="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium rounded transition"
                       >
-                        Edit
+                        Update
                       </button>
                       <button
                         onClick={() => handleDelete(client.id)}

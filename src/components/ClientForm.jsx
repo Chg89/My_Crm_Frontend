@@ -2,9 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
-
 const ClientForm = () => {
-  
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -13,7 +11,7 @@ const ClientForm = () => {
   const isEditing = location.state?.isEditing || false;
   const clientData = location.state?.client || null;
   console.log("Location state:", location.state);
-  
+
   // Initialize form with client data if editing, otherwise empty strings
   const [formData, setFormData] = useState({
     firstName: clientData?.firstName || "",
@@ -23,25 +21,25 @@ const ClientForm = () => {
   const [errors, setErrors] = useState({});
 
   const validate = (name, value) => {
-  let error = "";
+    let error = "";
 
-  // 1. Convert to string and handle null/undefined/numbers
-  const cleanValue = String(value || "").trim();
+    // 1. Convert to string and handle null/undefined/numbers
+    const cleanValue = String(value || "").trim();
 
-  // 2. Check if the cleaned string is empty
-  if (cleanValue.length === 0) {
-    error = "This field is required";
-  } 
-  // 3. Email specific validation
-  else if (name === "email") {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(cleanValue)) {
-      error = "Please enter a valid email address";
+    // 2. Check if the cleaned string is empty
+    if (cleanValue.length === 0) {
+      error = "This field is required";
     }
-  }
+    // 3. Email specific validation
+    else if (name === "email") {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(cleanValue)) {
+        error = "Please enter a valid email address";
+      }
+    }
 
-  return error;
-};
+    return error;
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -52,9 +50,9 @@ const ClientForm = () => {
     });
   };
 
-    const handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     // 1. Validate all fields at once
     const newErrors = {};
     Object.keys(formData).forEach((key) => {
@@ -63,58 +61,58 @@ const ClientForm = () => {
         newErrors[key] = error;
       }
     });
-  
+
     // 2. If there are any errors, update state and stop
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return; // Don't submit!
     }
-  
+
     // 3. If no errors, proceed with API call
     if (isEditing) {
-      
-
-      // Call your API 
+      // Call your API
       fetch(`http://localhost:8080/api/clients/${clientData.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Client changed:", data);
-        // Add your success handling or navigation here
-        navigate("/clients");
+        },
+        body: JSON.stringify(formData),
       })
-      .catch((error) => {
-        console.error("Error saving client:", error);
-      });
-  } else {
-    // Call your API 
-    fetch("http://localhost:8080/api/clients", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Client saved:", data);
-        // Add your success handling or navigation here
-        navigate("/clients");
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Client changed:", data);
+          // Add your success handling or navigation here
+          navigate("/clients");
+        })
+        .catch((error) => {
+          console.error("Error saving client:", error);
+        });
+    } else {
+      // Call your API
+      fetch("http://localhost:8080/api/clients", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       })
-      .catch((error) => {
-        console.error("Error saving client:", error);
-      });
-  }
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Client saved:", data);
+          // Add your success handling or navigation here
+          navigate("/clients");
+        })
+        .catch((error) => {
+          console.error("Error saving client:", error);
+        });
+    }
   };
 
   return (
     <div className="max-w-md mx-auto mt-10 p-8 bg-slate-900 border border-slate-800 rounded-2xl shadow-xl">
-      <h1 className="text-2xl font-bold text-white mb-6">{isEditing ? "Edit Client" : "Add New Client"}</h1>
+      <h1 className="text-2xl font-bold text-white mb-6">
+        {isEditing ? "Edit Client" : "Add New Client"}
+      </h1>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* First Name */}
@@ -204,7 +202,7 @@ const ClientForm = () => {
           /* Optional: Disable button if there are errors */
           disabled={Object.values(errors).some((error) => error !== "")}
         >
-          Create Client
+          Submit
         </button>
       </form>
     </div>
