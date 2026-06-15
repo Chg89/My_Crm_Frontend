@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ClientService from "../services/ClientService";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
@@ -71,45 +72,28 @@ const ClientForm = () => {
     // 3. If no errors, proceed with API call
     if (isEditing) {
       // Call your API
-      fetch(`http://localhost:8080/api/clients/${clientData.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Client changed:", data);
-          // Add your success handling or navigation here
+      ClientService.updateClient(clientData.id, formData)
+        .then((response) => {
+          console.log("Client changed:", response.data);
           navigate("/clients");
         })
         .catch((error) => {
           console.error("Error saving client:", error);
         });
     } else {
-      // Call your API
-      fetch("http://localhost:8080/api/clients", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Client saved:", data);
-          // Add your success handling or navigation here
+      ClientService.createClient(formData)
+        .then((response) => {
+          console.log("Client created:", response.data);
           navigate("/clients");
         })
         .catch((error) => {
-          console.error("Error saving client:", error);
+          console.error("Error creating client:", error);
         });
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-8 bg-slate-900 border border-slate-800 rounded-2xl shadow-xl">
+    <div className="max-w-md mx-auto mt-10 p-8 bg-zinc-900 border border-zinc-800 rounded-2xl shadow-xl">
       <h1 className="text-2xl font-bold text-white mb-6">
         {isEditing ? "Edit Client" : "Add New Client"}
       </h1>
@@ -117,7 +101,7 @@ const ClientForm = () => {
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* First Name */}
         <div>
-          <label className="block text-sm font-medium text-slate-400 mb-1.5">
+          <label className="block text-sm font-medium text-zinc-400 mb-1.5">
             First Name
           </label>
           <input
@@ -127,11 +111,11 @@ const ClientForm = () => {
             value={formData.firstName}
             onChange={handleChange}
             /* Dynamic class: red border if errors.firstName exists, otherwise slate-700 */
-            className={`w-full px-4 py-2.5 bg-slate-800 border rounded-lg text-white placeholder-slate-500 
+            className={`w-full px-4 py-2.5 bg-zinc-800 border rounded-lg text-white placeholder-zinc-500
       focus:outline-none focus:ring-2 transition ${
         errors.firstName
           ? "border-red-500 focus:ring-red-500/20"
-          : "border-slate-700 focus:ring-indigo-500"
+          : "border-zinc-700 focus:ring-violet-500"
       }`}
           />
 
@@ -145,7 +129,7 @@ const ClientForm = () => {
 
         {/* Last Name */}
         <div>
-          <label className="block text-sm font-medium text-slate-400 mb-1.5">
+          <label className="block text-sm font-medium text-zinc-400 mb-1.5">
             Last Name
           </label>
           <input
@@ -154,11 +138,11 @@ const ClientForm = () => {
             placeholder="Doe"
             value={formData.lastName}
             onChange={handleChange}
-            className={`w-full px-4 py-2.5 bg-slate-800 border rounded-lg text-white placeholder-slate-500 
+            className={`w-full px-4 py-2.5 bg-zinc-800 border rounded-lg text-white placeholder-zinc-500
       focus:outline-none focus:ring-2 transition ${
         errors.lastName
           ? "border-red-500 focus:ring-red-500/20"
-          : "border-slate-700 focus:ring-indigo-500"
+          : "border-zinc-700 focus:ring-violet-500"
       }`}
           />
           {errors.lastName && (
@@ -170,7 +154,7 @@ const ClientForm = () => {
 
         {/* Email Address */}
         <div>
-          <label className="block text-sm font-medium text-slate-400 mb-1.5">
+          <label className="block text-sm font-medium text-zinc-400 mb-1.5">
             Email Address
           </label>
           <input
@@ -179,11 +163,11 @@ const ClientForm = () => {
             placeholder="jane.doe@example.com"
             value={formData.email}
             onChange={handleChange}
-            className={`w-full px-4 py-2.5 bg-slate-800 border rounded-lg text-white placeholder-slate-500 
+            className={`w-full px-4 py-2.5 bg-zinc-800 border rounded-lg text-white placeholder-zinc-500
       focus:outline-none focus:ring-2 transition ${
         errors.email
           ? "border-red-500 focus:ring-red-500/20"
-          : "border-slate-700 focus:ring-indigo-500"
+          : "border-zinc-700 focus:ring-violet-500"
       }`}
           />
           {errors.email && (
@@ -197,8 +181,8 @@ const ClientForm = () => {
         <button
           onClick={handleSubmit}
           type="submit"
-          className="w-full mt-4 px-5 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg
-           shadow-lg shadow-indigo-500/20 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full mt-4 px-5 py-3 bg-violet-600 hover:bg-violet-500 text-white font-semibold rounded-lg
+           shadow-lg shadow-violet-500/20 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
           /* Optional: Disable button if there are errors */
           disabled={Object.values(errors).some((error) => error !== "")}
         >
