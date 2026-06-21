@@ -17,36 +17,27 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex items-center gap-2">
+          <NavLink to="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-violet-600 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(124,58,237,0.4)]">
               <span className="text-white font-bold text-sm">C</span>
             </div>
             <span className="text-xl font-bold text-white">ClientFlow</span>
-          </div>
+          </NavLink>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex space-x-8 text-sm font-medium">
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-violet-400"
-                  : "text-zinc-400 hover:text-white transition"
-              }
-            >
-              Clients
-            </NavLink>
-
-            <NavLink
-              to="/profile"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-violet-400"
-                  : "text-zinc-400 hover:text-white transition"
-              }
-            >
-              Profile
-            </NavLink>
+            {isLoggedIn && (
+              <NavLink
+                to="/clients"
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-violet-400"
+                    : "text-zinc-400 hover:text-white transition"
+                }
+              >
+                Clients
+              </NavLink>
+            )}
 
             {isLoggedIn ? (
               <button
