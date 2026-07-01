@@ -6,6 +6,14 @@ import ClientService from "../services/ClientService";
 function ListClientsComponent() {
   const [clients, setClients] = useState([]);
   const navigate = useNavigate();
+  const user = JSON.parse(sessionStorage.getItem("user"));
+  const isAdmin = user?.role === "ROLE_ADMIN";
+
+  // MY TESTS
+  // console.log("User:", user);
+  // console.log("Is admin?", isAdmin);
+  // //{ token: "...", role: "ROLE_ADMIN", tokenType: "Bearer" }
+  // console.log("Token:", user?.token);
 
   useEffect(() => {
     ClientService.getAllClients()
@@ -29,14 +37,14 @@ function ListClientsComponent() {
       <h2 className="text-3xl font-bold text-white mb-6 text-center">
         List of Clients
       </h2>
-
-      <button
-        onClick={() => navigate("/add-client")}
-        className="inline-flex items-center gap-2 px-5 py-2.5 mb-4 border border-violet-500/40 text-violet-400 hover:bg-violet-500/10 hover:border-violet-400 text-sm font-medium rounded-lg transition"
-      >
-        <span className="text-lg leading-none">+</span> Add new client
-      </button>
-
+      {isAdmin && (
+        <button
+          onClick={() => navigate("/add-client")}
+          className="inline-flex items-center gap-2 px-5 py-2.5 mb-4 border border-violet-500/40 text-violet-400 hover:bg-violet-500/10 hover:border-violet-400 text-sm font-medium rounded-lg transition"
+        >
+          <span className="text-lg leading-none">+</span> Add new client
+        </button>
+      )}
       <div className="overflow-hidden rounded-xl border border-zinc-800 shadow-2xl">
         <table className="w-full text-left border-collapse bg-zinc-900 text-zinc-300">
           <thead className="bg-zinc-800/60 text-zinc-100 uppercase text-xs font-semibold tracking-wider">
@@ -81,7 +89,10 @@ function ListClientsComponent() {
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="px-6 py-10 text-center text-zinc-500">
+                <td
+                  colSpan="5"
+                  className="px-6 py-10 text-center text-zinc-500"
+                >
                   No clients found.
                 </td>
               </tr>
