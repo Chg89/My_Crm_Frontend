@@ -36,6 +36,7 @@ function App() {
               path="/appointments/:id/edit"
               element={<AppointmentForm />}
             />
+            <Route path="/add-appointment" element={<AppointmentForm />} />
             {/* http://localhost:8080/api/clients/add-client */}
             <Route path="/add-client" element={<ClientForm />} />
             {/* http://localhost:8080/register */}

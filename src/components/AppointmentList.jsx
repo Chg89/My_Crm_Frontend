@@ -13,6 +13,8 @@ const localizer = momentLocalizer(moment);
 function AppointmentList() {
   const [events, setEvents] = useState([]);
   const navigate = useNavigate();
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentView, setCurrentView] = useState("month");
 
   useEffect(() => {
     Promise.all([
@@ -70,6 +72,10 @@ function AppointmentList() {
             startAccessor="start"
             endAccessor="end"
             style={{ height: "100%" }}
+            date={currentDate}
+            view={currentView}
+            onNavigate={(date) => setCurrentDate(date)}
+            onView={(view) => setCurrentView(view)}
             onSelectEvent={(event) =>
               navigate(`/appointments/${event.id}/edit`)
             }
