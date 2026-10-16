@@ -38,7 +38,31 @@ const Header = () => {
                 Clients
               </NavLink>
             )}
+            {isLoggedIn && (
+              <NavLink
+                to="/services"
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-violet-400"
+                    : "text-zinc-400 hover:text-white transition"
+                }
+              >
+                Services
+              </NavLink>
+            )}
 
+            {isLoggedIn && (
+              <NavLink
+                to="/appointments"
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-violet-400"
+                    : "text-zinc-400 hover:text-white transition"
+                }
+              >
+                Appointments
+              </NavLink>
+            )}
             {isLoggedIn ? (
               <button
                 onClick={handleLogout}
@@ -127,7 +151,8 @@ const Header = () => {
                 setIsOpen(false);
                 handleLogout();
               }}
-              className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-zinc-400 hover:bg-zinc-800 hover:text-white"
+              className="block w-full text-left px-3 py-2 rounded-md text-base font-medium
+               text-zinc-400 hover:bg-zinc-800 hover:text-white cursor-pointer"
             >
               Logout
             </button>

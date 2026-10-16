@@ -1,32 +1,13 @@
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 
 const API_URL = "http://localhost:8080/api/clients";
 
-//adding reqquest interceptor to include the JWT token in the Authorization header for all requests
-
-axios.interceptors.request.use(
-  (config) => {
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    if (user && user.token) {
-      config.headers["Authorization"] = `Bearer ${user.token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  },
-);
-
-const getAllClients = () => axios.get(API_URL);
-
-const getClientById = (id) => axios.get(`${API_URL}/${id}`);
-
-const createClient = (clientDto) => axios.post(API_URL, clientDto);
-
+const getAllClients = () => axiosInstance.get(API_URL);
+const getClientById = (id) => axiosInstance.get(`${API_URL}/${id}`);
+const createClient = (clientDto) => axiosInstance.post(API_URL, clientDto);
 const updateClient = (id, clientDto) =>
-  axios.put(`${API_URL}/${id}`, clientDto);
-
-const deleteClient = (id) => axios.delete(`${API_URL}/${id}`);
+  axiosInstance.put(`${API_URL}/${id}`, clientDto);
+const deleteClient = (id) => axiosInstance.delete(`${API_URL}/${id}`);
 
 const ClientService = {
   getAllClients,

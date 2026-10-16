@@ -1,0 +1,72 @@
+/* Το κεντρικό toolbar (μήνας/εβδομάδα/ημέρα + navigation) */
+.rbc-toolbar {
+  color: #e5e7eb;
+  margin-bottom: 1rem;
+}
+
+.rbc-toolbar button {
+  color: #e5e7eb;
+  background-color: #18181b;
+  border: 1px solid #3f3f46;
+}
+
+.rbc-toolbar button:hover {
+  background-color: #27272a;
+  color: #fff;
+}
+
+.rbc-toolbar button.rbc-active {
+  background-color: #7c3aed;
+  border-color: #7c3aed;
+  color: #fff;
+}
+
+/* Το grid */
+.rbc-month-view,
+.rbc-time-view {
+  background-color: #18181b;
+  border-color: #3f3f46;
+}
+
+.rbc-header {
+  color: #e5e7eb;
+  background-color: #27272a;
+  border-color: #3f3f46;
+}
+
+.rbc-day-bg {
+  background-color: #18181b;
+}
+
+.rbc-off-range-bg {
+  background-color: #0a0a0b;
+}
+
+.rbc-today {
+  background-color: rgba(124, 58, 237, 0.1);
+}
+
+.rbc-date-cell {
+  color: #9ca3af;
+}
+
+.rbc-month-row,
+.rbc-day-bg + .rbc-day-bg,
+.rbc-header + .rbc-header {
+  border-color: #3f3f46;
+}
+
+/* Τα ίδια τα appointment events */
+.rbc-event {
+  background-color: #7c3aed;
+  border: none;
+  border-radius: 4px;
+}
+
+.rbc-event:hover {
+  background-color: #6d28d9;
+}
+
+.rbc-show-more {
+  color: #a78bfa;
+}
