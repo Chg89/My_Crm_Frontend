@@ -44,6 +44,12 @@ function AppointmentForm() {
     }
   }, [id]);
 
+  const handleDelete = () => {
+    AppointmentService.deleteAppointment(id)
+      .then(() => navigate("/appointments"))
+      .catch((error) => console.error("Error deleting appointment:", error));
+  };
+
   const handleSubmit = (e) => {
     // Ίδιο pattern με ServiceOfferingForm
     e.preventDefault();
@@ -151,6 +157,15 @@ function AppointmentForm() {
             >
               Cancel
             </button>
+            {id && (
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="px-6 py-2.5 border border-red-500/40 text-red-400 hover:bg-red-500/10 hover:border-red-400 text-sm font-medium rounded-lg transition cursor-pointer"
+              >
+                Delete
+              </button>
+            )}
           </div>
         </form>
       </div>
