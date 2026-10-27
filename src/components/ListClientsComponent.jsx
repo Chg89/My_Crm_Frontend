@@ -17,7 +17,7 @@ function ListClientsComponent() {
 
   useEffect(() => {
     ClientService.getAllClients()
-      .then((response) => setClients(response.data))
+      .then((response) => setClients(response.data.content))
       .catch((error) => console.error("Error fetching clients:", error));
   }, []);
 

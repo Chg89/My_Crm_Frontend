@@ -22,11 +22,11 @@ function AppointmentForm() {
   useEffect(() => {
     // 1. Φόρτωσε τη λίστα clients (για το dropdown/autocomplete)
     ClientService.getAllClients()
-      .then((response) => setClients(response.data))
+      .then((response) => setClients(response.data.content))
       .catch((error) => console.error("Error fetching clients:", error));
     // 2. Φόρτωσε τη λίστα services (για το dropdown)
     OfferingService.getAllServiceOfferings()
-      .then((response) => setServices(response.data))
+      .then((response) => setServices(response.data.content))
       .catch((error) => console.error("Error fetching services:", error));
     // 3. Αν id υπάρχει (edit mode), φόρτωσε το υπάρχον appointment
     if (id) {
@@ -54,8 +54,6 @@ function AppointmentForm() {
     request
       .then(() => navigate("/appointments"))
       .catch((error) => console.error("Error submitting appointment:", error));
-    // dto = { clientId, serviceOfferingId, dateTime, status, description }
-    // id ? update : create
   };
 
   return (

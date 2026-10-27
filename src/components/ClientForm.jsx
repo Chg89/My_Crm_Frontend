@@ -11,7 +11,6 @@ const ClientForm = () => {
   // We use optional chaining (?.) and default values to prevent crashes
   const isEditing = location.state?.isEditing || false;
   const clientData = location.state?.client || null;
-  console.log("Location state:", location.state);
 
   // Initialize form with client data if editing, otherwise empty strings
   const [formData, setFormData] = useState({

@@ -22,25 +22,27 @@ function AppointmentList() {
       AppointmentService.getAllAppointments(),
     ])
       .then(([servicesResponse, appointmentsResponse]) => {
-        const services = servicesResponse.data;
+        const services = servicesResponse.data.content; // Assuming the services are in the 'content' field
 
-        const mappedEvents = appointmentsResponse.data.map((appointment) => {
-          const service = services.find(
-            (s) => s.id === appointment.serviceOfferingId,
-          );
-          const durationMinutes = service?.durationMinutes || 30;
+        const mappedEvents = appointmentsResponse.data.content.map(
+          (appointment) => {
+            const service = services.find(
+              (s) => s.id === appointment.serviceOfferingId,
+            );
+            const durationMinutes = service?.durationMinutes || 30;
 
-          const start = new Date(appointment.dateTime);
-          const end = new Date(start.getTime() + durationMinutes * 60000);
+            const start = new Date(appointment.dateTime);
+            const end = new Date(start.getTime() + durationMinutes * 60000);
 
-          return {
-            id: appointment.id,
-            title: appointment.description || service?.name || "Appointment",
-            start,
-            end,
-            status: appointment.status,
-          };
-        });
+            return {
+              id: appointment.id,
+              title: appointment.description || service?.name || "Appointment",
+              start,
+              end,
+              status: appointment.status,
+            };
+          },
+        );
 
         setEvents(mappedEvents);
       })

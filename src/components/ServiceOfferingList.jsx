@@ -11,7 +11,7 @@ function ServiceOfferingList() {
 
   useEffect(() => {
     OfferingService.getAllServiceOfferings()
-      .then((response) => setServiceOfferings(response.data))
+      .then((response) => setServiceOfferings(response.data.content))
       .catch((error) =>
         console.error("Error fetching service offerings:", error),
       );
